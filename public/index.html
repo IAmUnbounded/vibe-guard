@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vibe Guard | Security Scanner for AI-Generated Code</title>
+    <meta
+      name="description"
+      content="Vibe Guard scans repositories for risky patterns common in rushed AI-generated code so teams can ship faster without blind security debt."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="topbar">
+      <div class="brand">VIBE GUARD</div>
+      <a class="nav-link" href="#run">Run Scanner</a>
+    </header>
+
+    <main>
+      <section class="hero reveal">
+        <p class="kicker">SECURITY FOR VIBE CODERS</p>
+        <h1>Catch risky code before it reaches production.</h1>
+        <p class="lead">
+          Vibe Guard is a CLI that finds common vulnerability patterns introduced by fast AI-assisted coding workflows.
+        </p>
+        <div class="cta-row">
+          <a href="#run" class="btn primary">Try The CLI</a>
+          <a href="#features" class="btn ghost">See Features</a>
+        </div>
+      </section>
+
+      <section id="features" class="features reveal">
+        <article class="panel">
+          <h2>High-signal rules</h2>
+          <p>
+            Detects dangerous patterns like disabled TLS checks, command execution, hardcoded secrets,
+            unsafe deserialization, and auth bypass markers.
+          </p>
+        </article>
+        <article class="panel">
+          <h2>CI-ready output</h2>
+          <p>
+            Filter by severity, export JSON for pipelines, and fail builds when risky findings cross your threshold.
+          </p>
+        </article>
+        <article class="panel">
+          <h2>Fast repository scan</h2>
+          <p>
+            Recursively scans source files, skips generated folders by default, and reports exact file+line context.
+          </p>
+        </article>
+      </section>
+
+      <section id="run" class="terminal reveal">
+        <div class="terminal-head">
+          <span></span><span></span><span></span>
+          <p>Terminal</p>
+        </div>
+        <pre><code id="command">npm install
+npx vibe-guard scan . --min-severity high --fail-on medium</code></pre>
+        <button id="copy-btn" class="btn primary small">Copy command</button>
+      </section>
+    </main>
+
+    <footer class="footer reveal">
+      <p>Ship fast. Scan first.</p>
+      <p class="muted">Vibe Guard CLI</p>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

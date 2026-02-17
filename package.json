@@ -1,0 +1,35 @@
+{
+  "name": "vibe-guard",
+  "version": "1.1.0",
+  "description": "CLI scanner and landing page for detecting security anti-patterns in AI-generated code.",
+  "type": "commonjs",
+  "main": "src/scanner.js",
+  "bin": {
+    "vibe-guard": "bin/vibe-guard.js"
+  },
+  "scripts": {
+    "scan": "node ./bin/vibe-guard.js scan .",
+    "scan:json": "node ./bin/vibe-guard.js scan . --json",
+    "scan:strict": "node ./bin/vibe-guard.js scan . --min-severity high --fail-on high",
+    "pack:check": "npm pack --dry-run",
+    "site": "node ./web/server.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "security",
+    "scanner",
+    "cli",
+    "ai",
+    "vibe-coding"
+  ],
+  "author": "",
+  "license": "MIT"
+}
