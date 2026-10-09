@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { rules, severities } = require("./rules");
 const { analyzeDataflow } = require("./dataflow");
+const { isLikelyFalsePositive } = require("./filters");
 
 const DEFAULT_IGNORED_DIRS = new Set([
   ".git",
@@ -14,7 +15,27 @@ const DEFAULT_IGNORED_DIRS = new Set([
   "coverage",
   ".cache",
   ".turbo",
+  "vendor",
+  "third_party",
+  "third-party",
+  "Pods",
+  "testdata",
+  "fixtures",
+  "__fixtures__",
+  "__mocks__",
 ]);
+
+const VENDORED_FILE_PATTERNS = [/\.min\.(js|css)$/, /\.umd\.js$/, /\.bundle\.js$/, /[\\/]vendor[\\/]/i];
+
+const TEST_FILE_PATTERNS = [
+  /[\\/](test|tests|__tests__|spec|e2e)[\\/]/,
+  /\.(test|spec)\.[cm]?[jt]sx?$/,
+  /_test\.go$/,
+  /(^|[\\/])test_[^\\/]*\.py$/,
+  /_test\.py$/,
+  /(Test|Tests|Spec)\.(java|kt|cs|php|scala|swift)$/,
+  /_spec\.rb$/,
+];
 
 const DEFAULT_EXTENSIONS = new Set([
   ".js",
@@ -72,17 +93,13 @@ function normalizeSeverity(input) {
 function shouldScanFile(filePath, options) {
   const ext = path.extname(filePath).toLowerCase();
 
+  if (options.defaultIgnore && VENDORED_FILE_PATTERNS.some((pattern) => pattern.test(filePath))) {
+    return false;
+  }
+
   if (!options.includeTests) {
-    const lower = filePath.toLowerCase();
-    if (
-      lower.includes("/test/") ||
-      lower.includes("/tests/") ||
-      lower.includes("/__tests__/") ||
-      lower.endsWith(".test.js") ||
-      lower.endsWith(".spec.js") ||
-      lower.endsWith(".test.ts") ||
-      lower.endsWith(".spec.ts")
-    ) {
+    const normalized = filePath.replace(/\\/g, "/");
+    if (TEST_FILE_PATTERNS.some((pattern) => pattern.test(normalized))) {
       return false;
     }
   }
@@ -210,6 +227,9 @@ function scanFile(filePath, options) {
         }
 
         seen.add(key);
+        if (options.filterFalsePositives && isLikelyFalsePositive(rule.id, match, content)) {
+          continue;
+        }
         findings.push(finding);
       }
     }
@@ -264,6 +284,10 @@ function scanRepository(targetPath, options = {}) {
         : Boolean(options.includeDataflow),
     defaultIgnore:
       options.defaultIgnore === undefined ? true : Boolean(options.defaultIgnore),
+    filterFalsePositives:
+      options.filterFalsePositives === undefined
+        ? true
+        : Boolean(options.filterFalsePositives),
   };
 
   const files = collectFiles(absoluteTarget, normalizedOptions);

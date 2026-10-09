@@ -12,7 +12,8 @@
     "scan:json": "node ./bin/vibe-guard.js scan . --json",
     "scan:strict": "node ./bin/vibe-guard.js scan . --min-severity high --fail-on high",
     "pack:check": "npm pack --dry-run",
-    "site": "node ./web/server.js"
+    "site": "node ./web/server.js",
+    "test": "node --test test/*.test.js"
   },
   "files": [
     "bin",

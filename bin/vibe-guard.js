@@ -24,7 +24,8 @@ function printHelp() {
   process.stdout.write(`  --max-file-size-kb <number>  Skip files larger than given KB (default: 512)\n`);
   process.stdout.write(`  --include-tests              Include test/spec files in scan\n`);
   process.stdout.write(`  --no-dataflow               Disable taint/dataflow heuristics\n`);
-  process.stdout.write(`  --no-default-ignore          Scan hidden/build directories as well\n`);
+  process.stdout.write(`  --no-default-ignore          Scan hidden/build/vendored directories as well\n`);
+  process.stdout.write(`  --no-fp-filter               Report matches the false-positive filter would drop\n`);
   process.stdout.write(`  -h, --help                   Show this help\n\n`);
   process.stdout.write(`Examples:\n`);
   process.stdout.write(`  vibe-guard scan .\n`);
@@ -42,6 +43,7 @@ function parseArgs(argv) {
     includeTests: false,
     includeDataflow: true,
     defaultIgnore: true,
+    filterFalsePositives: true,
     maxFileSizeBytes: 512 * 1024,
   };
 
@@ -76,6 +78,12 @@ function parseArgs(argv) {
 
     if (token === "--no-default-ignore") {
       result.defaultIgnore = false;
+      i += 1;
+      continue;
+    }
+
+    if (token === "--no-fp-filter") {
+      result.filterFalsePositives = false;
       i += 1;
       continue;
     }
@@ -162,6 +170,7 @@ function run() {
       includeDataflow: parsed.includeDataflow,
       minSeverity: parsed.minSeverity,
       defaultIgnore: parsed.defaultIgnore,
+      filterFalsePositives: parsed.filterFalsePositives,
       maxFileSizeBytes: parsed.maxFileSizeBytes,
     });
   } catch (error) {

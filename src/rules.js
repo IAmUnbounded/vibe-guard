@@ -37,10 +37,10 @@ const rules = [
     recommendation:
       "Use parameterized queries or query builders with bound parameters.",
     patterns: [
-      /SELECT\s+.+\$\{.+\}/i,
-      /INSERT\s+.+\$\{.+\}/i,
-      /UPDATE\s+.+\$\{.+\}/i,
-      /DELETE\s+.+\$\{.+\}/i,
+      /\bSELECT\b(?=.*\bFROM\b).*\$\{.+\}/i,
+      /\bINSERT\s+INTO\b.*\$\{.+\}/i,
+      /\bUPDATE\s+\S+\s+SET\b.*\$\{.+\}/i,
+      /\bDELETE\s+FROM\b.*\$\{.+\}/i,
       /cursor\.execute\s*\(\s*f["'][^"']*\{/i,
       /query\s*\(\s*`[^`]*\$\{/i,
     ],
